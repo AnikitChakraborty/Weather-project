@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Document</title>
+
+
+
+  <style>
+    * {
+
+      padding-left: 150 px;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+     
+    }
+    body {
+      color: rgb(4, 2, 2);
+      background-color:rgb(175, 196, 226);
+
+    }
+    .nav {
+      display: flex;
+      justify-content: center;
+     
+      height: 90px;
+      align-items: center;
+      color: antiquewhite;
+    }
+       
+   #links{
+    visibility: hidden;
+   }
+
+    .container {
+      border: 2px rgb(114, 250, 137);
+      display: grid;
+      row-gap: 20px;
+      column-gap: 20px;
+      grid-template-columns: 0.5fr 1fr 1fr 1fr;
+
+    }
+
+    .box {
+      border: 3px solid;
+      border-radius: 20px;
+      border-color: aliceblue;
+    }
+
+    #box-1 {
+      grid-row-start: 1;
+      grid-row-end: 5;
+      background-color: rgb(63, 194, 194);
+      height: 80vh;
+    }
+
+    #box-2 {
+
+      grid-column: 2/4;
+      height: auto;
+
+    }
+
+    #box-3 {
+      margin-top: 10vh;
+      grid-row: 1 / 5;
+      height: auto;
+    }
+
+    #box-4 {
+      grid-area: 2 / 2 /5 / 4;
+      height: auto;
+    }
+
+    .place {
+      display: flex;
+      flex-direction: row;
+    }
+    #sun{
+      display:inline;
+    }
+    #moon{
+      display: inline;
+    }
+    .cloud{
+      position:relative;
+      bottom: 100px;
+      left: 110px;
+      display: none;
+      }
+      .clouds_dis{
+        display: inline;
+      }
+   
+
+    .search-bar{
+  
+  height: 2.5rem;
+  width:auto;
+  max-width:90rem;
+  background: rgba(150, 141, 141, 0.2);
+  display: flex;
+  align-items: center;
+  border-radius: 26px;
+  margin-left: 20px;
+  }
+  #inp{
+    background: transparent;
+  border: 0;
+  padding:2rem 2rem;
+  font-size: medium;
+  color: #924527;
+  
+  }
+  .btn{
+  display: flex;
+  background: transparent;
+  border: 0; 
+  }
+ 
+
+  </style>
+
+
+</head>
+
+<body>
+
+
+  <div class="container">
+    <div class="box" id="box-1">box-1</div>
+    <div class="box" id="box-2">
+
+      <div class="1st-container">
+
+        <div class="nav">
+         <div class="search-bar">
+          <input id="inp" type="text" placeholder="Search location." >
+          <button class="btn" onclick="textfun()" ><i class="fa-solid fa-location-dot " style="font-size: 2rem;"></i></button>
+          <a id="links" href="http://www.google.com">abcd</a>
+        </div>
+        </div>
+        <h2 class="location">{%location%},{%country%}</h2>
+
+        <div class="place">
+          <h2> Humid {%humidity%}%</h2>
+
+          <div id="symbol" style="margin-left: 15rem; ">
+          <i id="sun" class="fa-solid fa-sun" style="color: #ff4500; padding-left:20%; font-size: 150px;"></i>
+          <i  id = "moon"class="fa-solid fa-moon" style="color: #f4f5f6; padding-left:20%; font-size: 150px;"></i>
+          <i  id="" class="cloud {%clouds_dis%} fa-solid fa-cloud " style="color: #d2d9e5; font-size: 120px;"></i>
+          
+        </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="box" id="box-3">box-3</div>
+    <div class="box" id="box-4">
+      <p id="date">WED | OCT 23 | 10:46 PM </p>
+      <h1 class="temp">{%tempval%}°C </h1>
+      <h3 class="tempmin_max">{%tempmin%}°C | {%tempmax%}°C</h3>
+      <h3> Clouds: {%Clouds%}%</h3>
+      
+
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  <script>
+
+   
+    let body =  document.body;
+    //let box = document.getElementsById("box-1").style.borderColor="red";
+    
+    
+
+    // const inputvalue =  document.getElementById("inp").value;
+
+    const textfun = () => {
+      let inputvalue = document.getElementById("inp").value;
+      const link = document.getElementById("links");
+      link.href = "/place?location=" + inputvalue;
+      link.click();
+
+      document.getElementById("inp").value = null;
+    }
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    const curDate = document.getElementById("date");
+     const temp = document.getElementsByClassName("temp").innerText;
+     console.log(temp);
+
+
+    const getCurrentDay = () => {
+
+      const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let currentTime = new Date();
+      let day = weekday[currentTime.getDay()];
+      return day;
+    };
+
+    const getCurrentTimeDate = () => {
+
+      let months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      let now = new Date();
+
+      let month = months[now.getMonth()];
+      let date = now.getDate();
+      let hours = now.getHours();   // getting hour
+      let mins = now.getMinutes();  // getting minutes
+
+      let periods = "AM";
+
+
+
+      if (hours > 11) {
+        periods = "PM";
+        if (hours > 12) {
+          hours -= 12;
+        };
+       
+       // body.style.backgroundColor="rgb(3,29,66)";
+        //body.style.color="white"
+       document.getElementById("moon").style.display="none";
+      }
+      
+      if(periods == "PM"  && hours > 5){
+        document.getElementById("sun").style.display="none";
+        document.getElementById("moon").style.display="inline";
+        body.style.backgroundColor="rgb(3,29,66)";
+        body.style.color="white";
+      }
+      
+
+      if (mins < 10) {
+        mins = "0" + mins;
+      }
+      return ` ${month} ${date} | ${hours}:${mins} ${periods} `;
+
+    };
+
+    curDate.innerHTML = getCurrentDay() + " |" + getCurrentTimeDate();
+
+</script>
+
+</body>
+
+</html>
