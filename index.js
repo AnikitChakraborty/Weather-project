@@ -1,11 +1,19 @@
+const dotenv =require('dotenv');
+dotenv.config({path : './config.env'})
 const http = require("http");
 const fs = require("fs");
-let requests = require("requests");
+
+
+const axios = require('axios'); // let requests = require("requests");
 const url = require('url');
 const homeFile = fs.readFileSync("index.html","utf-8");
+
 const port = process.env.port || 8000;
 
 
+
+const api_key = process.env.ID;
+console.log(typeof(api_key));
 
 // Function for converting kelvin to celcious.
 const chanceToCel = (tmpInkelvin) =>{
@@ -35,61 +43,69 @@ const replaceVal = (tempVal,orgVal)=>{
 
 };
 
-
-
-// Creating server
+const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=Assam&appid=${process.env.ID}`;
+//Creating server
 const server = http.createServer((req,res)=>{
   console.log(req.url);
   const {query , pathname} = url.parse(req.url, true);
 
  if(pathname == "/"  ){
+axios.get(apiUrl)
+  .then(response => {
+    // Handle the API response data here
+    const responseData = response.data;
+    console.log(responseData);
 
-   requests('https://api.openweathermap.org/data/2.5/weather?q=Assam&appid=978d6e4eba38337be6e72667f9668fbd')
-  .on('data',(chunk)=> {
-    const objdata = JSON.parse(chunk); // JSON => OBJECT
-    const arrData =[objdata];         // OBJECT => ARRAY
-  console.log(arrData);
-
-  const realTimeData = arrData
-  .map((val)=>replaceVal(homeFile,val))
-    .join("");
-    //console.log(realTimeData);
-  res.write(realTimeData);
-
-})
-.on('end', function (err) {
-  if (err) return console.log('connection closed due to errors', err);
- 
-  console.log('end');
-});
-
-    }
-    else if(pathname == '/place'){
-      const newPlace = query.location;
-
-      requests(`https://api.openweathermap.org/data/2.5/weather?q=${newPlace}&appid=978d6e4eba38337be6e72667f9668fbd`)
-      .on('data',(chunk)=> {
-        const objdata = JSON.parse(chunk); // JSON => OBJECT
-        const arrData =[objdata];         // OBJECT => ARRAY
+   // const objdata = JSON.parse(response.data); // JSON => OBJECT
+        const arrData =[responseData];         // OBJECT => ARRAY
       console.log(arrData);
-    
       const realTimeData = arrData
       .map((val)=>replaceVal(homeFile,val))
         .join("");
     
-      res.write(realTimeData);
-    
+      res.write( realTimeData);
+      res.end()
+
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('Error fetching data from the API:', error);
+  });
+
+ }
+
+ else if(pathname == "/place"  ){
+  const newPlace = query.location;
+  axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${newPlace}&appid=${process.env.ID}`)
+    .then(response => {
+      // Handle the API response data here
+      const responseData = response.data;
+      console.log(responseData);
+  
+     // const objdata = JSON.parse(response.data); // JSON => OBJECT
+          const arrData =[responseData];         // OBJECT => ARRAY
+        console.log(arrData);
+        const realTimeData = arrData
+        .map((val)=>replaceVal(homeFile,val))
+          .join("");
+      
+        res.write( realTimeData);
+        res.end()
+  
     })
-    .on('end', function (err) {
-      if (err) return console.log('connection closed due to errors', err);
-     
-      console.log('end');
+    .catch(error => {
+      // Handle errors
+      console.error('Error fetching data from the API:', error);
     });
-    
-
-    }
-
+  
+   }
 });
+
+
+
+
+
+
 server.listen(port, ()=>{
   console.log(`listening to port no at ${port}`);
 });
